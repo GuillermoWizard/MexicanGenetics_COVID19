@@ -86,9 +86,15 @@ sexo = soup.find(class_ = "##patientIdentificationComponent.sexHN_46092324957182
 
 sexo = sexo.next_element
 
-notas = soup.find(class_ = "##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd")
+#notas = soup.find(class_ = "##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd")
 
-notas = notas.next_element
+s = ""
+for tag in soup.find_all(class_="##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd"):
+    #print (tag.text)
+    s += tag.text
+    
+notas = s
+
 
 # Lista de datos a escribir en el archivo .csv
 
