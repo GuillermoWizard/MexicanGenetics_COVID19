@@ -92,14 +92,20 @@ s = ""
 for tag in soup.find_all(class_="##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd"):
     #print (tag.text)
     s += tag.text
+    s = s.replace('\n', ' ').replace('\r', '')
+    
     
 notas = s
 
 
-# Lista de datos a escribir en el archivo .csv
 
-listaDeDatos = [["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "NOTAS"],
-[nombre, sexo, edad, nacimiento, expediente, temporal, notas]]
+# Lista de datos a escribir en el archivo .csv
+#listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS"],
+#[nombre, sexo, edad, nacimiento, expediente, temporal, notas]]
+
+
+listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal  + "\t" + notas]]
+
 
 #Escribiendo en archivo .csvl
 
@@ -112,3 +118,7 @@ with open(f"{args.output}", "w+") as nuevoArchivo :
 nuevoArchivo.close()
 
 fp.close()
+
+
+
+    
