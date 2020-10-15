@@ -62,7 +62,7 @@ with open(rf"{args.path}") as fp:
 
 # Parsea nombre, edad, nacimiento, etc. y extrae la informacion correspondiente
 
-nombre = soup.find(title = "PATERNO MATERNO, APELLIDO")
+nombre = soup.find(class_="##patientIdentificationComponent.sNameHN l_form_big namePatient")
 
 nombre = nombre.next_element
 
