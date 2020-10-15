@@ -89,22 +89,27 @@ sexo = sexo.next_element
 #notas = soup.find(class_ = "##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd")
 
 s = ""
+htmlnotas = ["" for i in range(5)]
+print(len(htmlnotas))
+i = 0
+
 for tag in soup.find_all(class_="##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd"):
     #print (tag.text)
     s += tag.text
+    t = tag.text
     s = s.replace('\n', ' ').replace('\r', '')
+    t = t.replace('\n', ' ').replace('\r', '')
+    htmlnotas[i] = t
+    i += 1
+
     
-    
-notas = s
-
-
-
+#notas = s
 # Lista de datos a escribir en el archivo .csv
 #listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS"],
 #[nombre, sexo, edad, nacimiento, expediente, temporal, notas]]
 
 
-listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal  + "\t" + notas]]
+listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS1\tNOTAS2\tNOTAS3\tNOTAS4\tNOTAS5"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal  + "\t" + htmlnotas[0]  + "\t" + htmlnotas[1]  + "\t" + htmlnotas[2] + "\t" + htmlnotas[3]  + "\t" + htmlnotas[4]]]
 
 
 #Escribiendo en archivo .csvl
