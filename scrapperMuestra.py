@@ -56,7 +56,7 @@ args = parser.parse_args()
 
 # Abre el archivo html
 
-with open(rf"{args.path}") as fp:
+with open(rf"{args.path}", encoding = "utf8") as fp:
 
     soup = BeautifulSoup(fp, "lxml")
 
