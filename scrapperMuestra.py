@@ -1,7 +1,7 @@
 '''NAME
        scrapperMuestra.py
 VERSION
-        0.2
+        0.3
 AUTHOR
         Angel Adrian De la Cruz Castillo <angeldc@lcg.unam.mx>
 DESCRIPTION
@@ -11,6 +11,7 @@ CATEGORY
 USAGE
        python scrapperMuestra.py -p Ruta/hacia/archivo.html -o Nombre/de/archivo.csv
 ARGUMENTS
+
 ::-p: str, ruta hacia archivo input .html
 ::--path: str, ruta hacia archivo input .html
 ::-o: str, nombre de archivo output
@@ -148,6 +149,14 @@ else:
 
     sexo = str(sexo.next_element)
 
+    diagnosticoPrincipal = soup.find(class_ = "##1683876444801718701 reportDataRequired z-textbox z-textbox-real-readonly z-textbox-readonly")
+
+    diagnosticoPrincipal = diagnosticoPrincipal.next_element
+
+    fechaDefuncion = soup.find(class_= "bold ##patientIdentificationComponent.deathDateHN_3728526458450632832 z-label")
+
+    fechaDefuncion = str(fechaDefuncion.next_element)
+
     #notas = soup.find(class_ = "##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd")
 
     s = ""
@@ -170,7 +179,7 @@ else:
     #[nombre, sexo, edad, nacimiento, expediente, temporal, notas]]
 
 
-    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS1\tNOTAS2\tNOTAS3\tNOTAS4\tNOTAS5"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal  + "\t" + htmlnotas[0]  + "\t" + htmlnotas[1]  + "\t" + htmlnotas[2] + "\t" + htmlnotas[3]  + "\t" + htmlnotas[4]]]
+    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tDIAGNOSTICO\tFECH.DEFUNCION\tNOTAS1\tNOTAS2\tNOTAS3\tNOTAS4\tNOTAS5"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal  + "\t" + diagnosticoPrincipal + "\t" + fechaDefuncion +"\t"+ htmlnotas[0]  + "\t" + htmlnotas[1]  + "\t" + htmlnotas[2] + "\t" + htmlnotas[3]  + "\t" + htmlnotas[4]]]
 
 
     #Escribiendo en archivo .csvl
@@ -184,3 +193,8 @@ else:
     nuevoArchivo.close()
 
     fp.close()
+
+
+
+
+
