@@ -1,7 +1,7 @@
 '''NAME
        scrapperMuestra.py
 VERSION
-        0.3
+        0.2
 AUTHOR
         Angel Adrian De la Cruz Castillo <angeldc@lcg.unam.mx>
 DESCRIPTION
@@ -23,6 +23,12 @@ from bs4 import BeautifulSoup
 import argparse
 
 import csv
+
+from c19mining.covid import MedNotesMiner 
+
+import simplejson as json
+
+import re
 
 # Parseador de argumentos
 
@@ -104,7 +110,7 @@ if soup.find(class_ = "js flexbox canvas canvastext webgl no-touch geolocation p
     #[nombre, sexo, edad, nacimiento, expediente, temporal, notas]]
 
 
-    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS1\tNOTAS2\tNOTAS3\tNOTAS4\tNOTAS5"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal  + "\t" + htmlnotas[0]  + "\t" + htmlnotas[1]  + "\t" + htmlnotas[2] + "\t" + htmlnotas[3]  + "\t" + htmlnotas[4]]]
+    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tDIAGNOSTICO\tCOVID\tSINTOMAS\tCOMORBS\tMUESTREO\tMEDICAMENTOS\tFECH.DEFUNCION\t"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal + "\t" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos"]]
 
 
     #Escribiendo en archivo .csvl
@@ -159,32 +165,40 @@ else:
 
     #notas = soup.find(class_ = "##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd")
 
-    s = ""
-    htmlnotas = ["" for i in range(5)]
-    i = 0
+    notas = str(soup.find_all(class_ = "##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd"))
 
-    for tag in soup.find_all(class_="##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd"):
-        #print (tag.text)
-        s += tag.text
-        t = tag.text
-        s = s.replace('\n', ' ').replace('\r', '')
-        t = t.replace('\n', ' ').replace('\r', '')
-        htmlnotas[i] = t
-        i += 1
+    covidSeeker = MedNotesMiner(notas)
 
-    
-    #notas = s
-    # Lista de datos a escribir en el archivo .csv
-    #listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS"],
-    #[nombre, sexo, edad, nacimiento, expediente, temporal, notas]]
+    covidSeeker.check_covid19()
+
+    covidSeeker.check_symptoms()
+
+    covidSeeker.check_comorbidities()
+
+    covidSeeker.check_sampling()
+
+    covidSeeker.check_drugs()
+
+    covidInsights = json.dumps(covidSeeker.clues, encoding = "utf8")
+
+    covid =  re.findall(r'"COVID-19": {.*}, "sintomas"', str(covidInsights))
+
+    sintomas =  re.findall(r'"sintomas": {.*}, "comorbilidades"', str(covidInsights))
+
+    comorbilidades = re.findall(r'"comorbilidades": {.*}', str(covidInsights))
+
+    muestreo = re.findall(r'"muestreo": {.*}, "medicamentos"', str(covidInsights))
+
+    medicamentos = re.findall(r'"medicamentos": {.*}', str(covidInsights))
 
 
-    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tDIAGNOSTICO\tFECH.DEFUNCION\tNOTAS1\tNOTAS2\tNOTAS3\tNOTAS4\tNOTAS5"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal  + "\t" + diagnosticoPrincipal + "\t" + fechaDefuncion +"\t"+ htmlnotas[0]  + "\t" + htmlnotas[1]  + "\t" + htmlnotas[2] + "\t" + htmlnotas[3]  + "\t" + htmlnotas[4]]]
+
+    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tDIAGNOSTICO\tCOVID\tSINTOMAS\tCOMORBS\tMUESTREO\tMEDICAMENTOS\tFECH.DEFUNCION\t"],[str(nombre) + "\t" + str(sexo) + "\t" + str(edad) + "\t" + str(nacimiento) + "\t" + str(expediente) + "\t" + str(temporal)  + "\t" + str(diagnosticoPrincipal) + "\t" + str(covid) + "\t" + str(sintomas) + "\t" + str(comorbilidades) + "\t" + str(muestreo) + "\t" + str(medicamentos) + "\t" + str(fechaDefuncion) ]]
 
 
     #Escribiendo en archivo .csvl
 
-    with open(f"{args.output}", "w+") as nuevoArchivo :
+    with open(f"{args.output}", "w+", encoding = "utf8") as nuevoArchivo :
     
         escritor = csv.writer(nuevoArchivo)
 
@@ -193,8 +207,3 @@ else:
     nuevoArchivo.close()
 
     fp.close()
-
-
-
-
-
