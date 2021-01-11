@@ -1,7 +1,7 @@
 '''NAME
        scrapperMuestra.py
 VERSION
-        0.4
+        0.5
 AUTHOR
         Angel Adrian De la Cruz Castillo <angeldc@lcg.unam.mx>
 DESCRIPTION
@@ -11,7 +11,6 @@ CATEGORY
 USAGE
        python scrapperMuestra.py -p Ruta/hacia/archivo.html -o Nombre/de/archivo.csv
 ARGUMENTS
-
 ::-p: str, ruta hacia archivo input .html
 ::--path: str, ruta hacia archivo input .html
 ::-o: str, nombre de archivo output
@@ -22,13 +21,15 @@ from bs4 import BeautifulSoup
 
 import argparse
 
-import csv
+import csv 
 
 from c19mining.covid import MedNotesMiner 
 
 import simplejson as json
 
 import re
+
+import pandas as pd
 
 # Parseador de argumentos
 
@@ -63,7 +64,7 @@ args = parser.parse_args()
 
 # Abre el archivo html
 
-with open(rf"{args.path}", encoding = "utf8") as fp:
+with open(rf"{args.path}", encoding = "utf-8") as fp:
 
     soup = BeautifulSoup(fp, "lxml")
 
@@ -179,26 +180,64 @@ else:
 
     covidSeeker.check_drugs()
 
-    covidInsights = json.dumps(covidSeeker.clues, encoding = "utf8")
+    covidInsights = json.dumps(covidSeeker.clues, encoding = "utf-8", ensure_ascii = False)
 
-    covid =  re.findall(r'"COVID-19": {.*}, "sintomas"', str(covidInsights))
+    covidInsights = json.loads(covidInsights, encoding = "utf-8")
 
-    sintomas =  re.findall(r'"sintomas": {.*}, "comorbilidades"', str(covidInsights))
+    covid = ""
 
-    comorbilidades = re.findall(r'"comorbilidades": {.*}', str(covidInsights))
+    sintomas = ""
 
-    muestreo = re.findall(r'"muestreo": {.*}, "medicamentos"', str(covidInsights))
+    comorbilidades = ""
 
-    medicamentos = re.findall(r'"medicamentos": {.*}', str(covidInsights))
+    muestreo = ""
+
+    medicamentos = ""
+    
+# Recorre diccionario de covidInsights
+
+    for key1 in covidInsights: 
+
+    	# Salta la primera key "texto"
+
+        if key1 != "texto":
+
+            # Recorre diccionario de cada variable de interes
+
+            for key2 in covidInsights[key1]:
+
+                # Recorre cada valor de cada variable de interes
+
+                for key3 in covidInsights[key1][key2]:
+
+                    if key1 == "comorbilidades":
+
+                        comorbilidades += str(key3) + " "
+                    
+                    if key1 == "sintomas" :
+
+                        sintomas += str(key3) + ""
+
+                    if key1 == "COVID-19":
+
+                        covid += str(key3) + ""
+
+                    if key1 == "muestreos" :
+
+                        muestreo += str(key3) + ""
+
+                    if key1 == "medicamentos":
+
+                        medicamentos += str(key3) + ""
 
 
 
-    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tDIAGNOSTICO\tCOVID\tSINTOMAS\tCOMORBS\tMUESTREO\tMEDICAMENTOS\tFECH.DEFUNCION\t"],[str(nombre) + "\t" + str(sexo) + "\t" + str(edad) + "\t" + str(nacimiento) + "\t" + str(expediente) + "\t" + str(temporal)  + "\t" + str(diagnosticoPrincipal) + "\t" + str(covid) + "\t" + str(sintomas) + "\t" + str(comorbilidades) + "\t" + str(muestreo) + "\t" + str(medicamentos) + "\t" + str(fechaDefuncion) ]]
+    listaDeDatos = [["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"],[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion) ]]
 
 
     #Escribiendo en archivo .csvl
 
-    with open(f"{args.output}", "w+", encoding = "utf8") as nuevoArchivo :
+    with open(f"{args.output}.csv", "w+", encoding = "utf-8") as nuevoArchivo :
     
         escritor = csv.writer(nuevoArchivo)
 
@@ -207,3 +246,7 @@ else:
     nuevoArchivo.close()
 
     fp.close()
+
+df = pd.DataFrame([[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion)]], columns = ["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"]) 
+
+df.to_excel(f"{args.output}.xlsx", encoding = "utf-8")
