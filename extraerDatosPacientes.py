@@ -57,7 +57,7 @@ for pac in pacientes[0:3]:
             with open(rf"{f}", encoding = "utf-8") as fp:
                 soup = BeautifulSoup(fp, "lxml")
             print(f)
-            pac_exp, pac_data = scrapperHTML(f)
+            pac_data = scrapperHTML(f)
         except UnicodeDecodeError:
             # si no es html pero es pdf determinar que tipo de laboratorio es y obtener tabla
             f = f.split('/')[-1].replace('.html','.pdf')
@@ -65,7 +65,7 @@ for pac in pacientes[0:3]:
             with open(f,'rb') as pdfFileObj:
                 pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
             print(f)
-            pac_exp, pac_data = scrapperPDF(f)
+            pac_data = scrapperPDF(f)
         # anonimizar
         # análisis de texto buscar terminos covid y etc con covidminer
         
