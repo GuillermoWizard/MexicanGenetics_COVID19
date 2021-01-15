@@ -1,0 +1,2 @@
+def scrapperHTML(filename):
+	return '', {}

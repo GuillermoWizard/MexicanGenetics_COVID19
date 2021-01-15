@@ -2,7 +2,9 @@ argparse
 simplejson
 
 bs4
+lxml
 pandas
+PyPDF2
 tabula-py
 
 

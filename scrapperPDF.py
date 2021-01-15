@@ -1,0 +1,2 @@
+def scrapperPDF(filename):
+	return '', {}
