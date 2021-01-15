@@ -1,0 +1,8 @@
+argparse
+simplejson
+
+bs4
+pandas
+tabula-py
+
+
