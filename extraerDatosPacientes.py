@@ -46,6 +46,7 @@ args = parser.parse_args()
 
 # navegar el arbol de archivos
 _, pacientes, _ = next(walk(args.path))
+datos_pacientes = {}
 
 for pac in pacientes[0:3]:
     pac_path = args.path + '/'+pac
@@ -56,16 +57,24 @@ for pac in pacientes[0:3]:
         try: # si es html valido extraer información de html con tags
             with open(rf"{f}", encoding = "utf-8") as fp:
                 soup = BeautifulSoup(fp, "lxml")
-            print(f)
-            pac_data = scrapperHTML(f)
+            
         except UnicodeDecodeError:
             # si no es html pero es pdf determinar que tipo de laboratorio es y obtener tabla
             f = f.split('/')[-1].replace('.html','.pdf')
             f = pac_path+'/'+f
             with open(f,'rb') as pdfFileObj:
                 pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-            print(f)
-            pac_data = scrapperPDF(f)
-        # anonimizar
-        # análisis de texto buscar terminos covid y etc con covidminer
-        
+            
+        print(f)
+        if f[-5:]=='.html': pac_data = scrapperHTML(f)
+        elif f[-4:]=='.pdf': pac_data = scrapperPDF(f)
+
+        # merge dictionaries
+        if pac in datos_pacientes.keys():
+            datos_pacientes[pac].update(pac_data)
+        else: datos_pacientes[pac] = pac_data
+  
+for pac, data in datos_pacientes.items():
+    # anonimizar
+    # análisis de texto buscar terminos covid y etc con covidminer
+    print(pac, data)
