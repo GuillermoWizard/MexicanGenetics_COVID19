@@ -1,6 +1,28 @@
 # MexicanGenetics_COVID19
 
-## Requerimientos
+## Pipeline para el análisis de los datos de pacientes covid19
+
+[/] Navegar expedientes  
+* ver helpers.py  
+
+[AC] Obtener datos de todos los pacientes  
+* ver extraerDatosPacientes.py y scrapperHTML.py  
+* genera datos_pacientes.pk  
+
+[ME] Remover nombres, tratante y fechas de nacimiento de todos los archivos  
+* ver replaceStringsPDF.py  
+
+[AA] Extraer tablas de pdf  
+* ver scrapperPDF.py  
+
+[ME] Anonimizado agresivo sobre notas de html  
+* ver anonimizado.py  
+
+[AC] Covidminer sobre notas de html  
+
+
+
+## Requerimientos e instalación
 
 Descargar repositorio
 ```
@@ -68,4 +90,6 @@ en 3 líneas!
 si te interesa mejorar la biblioteca para que haga algo en especial, adelante bienvenida para sugerir y programar nueva funcionalidad
 
 ```
+
+
 
