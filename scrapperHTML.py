@@ -11,7 +11,8 @@ def scrapperHTML(filename):
         doc_string
         """
         val = soup.find(class_=jsclass)
-        val = str(val.next_element)
+        try: val = str(val.next_element)
+        except AttributeError: val = ''
         return val
 
 
