@@ -1,51 +1,38 @@
-import os
-import argparse
-from PyPDF2 import PdfFileReader, PdfFileWriter
+import re
+from os import path, makedirs
+from pickle import load
 
+from helpers import *
+import pdf_redactor
 
-def replace_text(content, replacements = dict()):
-    lines = content.splitlines()
-    result = ""
-    in_text = False
-    for line in lines:
-        if line == "BT": in_text = True
-        elif line == "ET": in_text = False
-        elif in_text:
-            cmd = line[-2:]
-            if cmd.lower() == 'tj':
-                replaced_line = line
-                for k, v in replacements.items():
-                    #improve this line for case
-                    replaced_line = replaced_line.replace(k, v)
-                result += replaced_line + "\n"
-            else: result += line + "\n"
-            continue
-        result += line + "\n"
-    return result
+dir_in = 'CovidPacientes'
+dir_out = 'CovidPacientesLabsAnon'
+file_in = 'data/datos_pacientes.pkl'
 
-def process_data(object, replacements):
-    data = object.getData()
-    decoded_data = data.decode('utf-8')
-    replaced_data = replace_text(decoded_data, replacements)
-    encoded_data = replaced_data.encode('utf-8')
-    if object.decodedSelf is not None:
-        object.decodedSelf.setData(encoded_data)
-    else: object.setData(encoded_data)
+with open(file_in, 'rb') as f:
+    datos_pacientes = load(f)
+    
+pac_files = navegar_expedientes(dir_in, f_format='.pdf', f_type='lab')
 
-def replace_strings_in_pdf(in_file, out_file='', replacements = dict()):
-    in_file = args["input"]
-    filename_base = in_file.replace(os.path.splitext(in_file)[1], "")
+if not path.exists(dir_out):
+    makedirs(dir_out)
 
-    pdf = PdfFileReader(in_file)
-    writer = PdfFileWriter()
-    for page_number in range(0, pdf.getNumPages()):
-        page = pdf.getPage(page_number)
-        contents = page.getContents()
-        if len(contents) > 0:
-            for obj in contents:
-                streamObj = obj.getObject()
-                process_data(streamObj, replacements)
-        else: process_data(contents, replacements)
-        writer.addPage(page)
-    if out_file=='': out_file.replace('.pdf','_replace.pdf')
-    with open(out_file, 'wb') as f: writer.write(f)
+for pac, pac_data in datos_pacientes.items():
+    if len(pac_files[pac]) >=5:
+        if not path.exists(dir_out+'/'+pac):
+            makedirs(dir_out+'/'+pac)
+        for in_file in pac_files[pac]:
+            print(in_file, end='\t')
+            out_file = in_file.replace(dir_in,dir_out).replace('.pdf','_anon.pdf')
+
+            options = pdf_redactor.RedactorOptions()
+            options.input_stream = in_file
+            options.output_stream = out_file
+
+            if 'tratante' not in pac_data:
+                pac_data['tratante'] = "Dr. REYNERIO FAGUNDO SIERRA"
+
+            replace = [re.compile(pac_data[var]) for var in ['nombre','nacimiento','tratante']]
+            options.content_filters = [(var,lambda m:'') for var in replace]
+            pdf_redactor.redactor(options)
+            print(out_file)

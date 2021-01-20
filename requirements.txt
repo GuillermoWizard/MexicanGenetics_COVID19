@@ -1,10 +1,4 @@
-argparse
-simplejson
-
 bs4
-lxml
-pandas
+pdfrw
 PyPDF2
-tabula-py
-
-
+jupyterlab

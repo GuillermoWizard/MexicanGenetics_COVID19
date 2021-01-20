@@ -2,22 +2,11 @@
 
 ## Pipeline para el análisis de los datos de pacientes covid19
 
-[/] Navegar expedientes  
-* ver helpers.py  
-
-[AC] Obtener datos de todos los pacientes  
-* ver extraerDatosPacientes.py y scrapperHTML.py  
-* genera datos_pacientes.pk  
-
-[ME] Remover nombres, tratante y fechas de nacimiento de todos los archivos  
-* ver replaceStringsPDF.py  
-
-[AA] Extraer tablas de pdf  
-* ver scrapperPDF.py  
-
-[ME] Anonimizado agresivo sobre notas de html  
-* ver anonimizado.py  
-
+[/] Navegar expedientes (helpers.py)  
+[AC] Obtener datos de todos los pacientes (extraerDatosPacientes.py y scrapperHTML.py > datos_pacientes.pk)  
+[/] Remover nombres, tratante y fechas de nacimiento de todos los labs pdf (replaceStringsPDF.py)  
+[AA] Extraer tablas de pdf (scrapperPDF.py)  
+[ME] Anonimizado agresivo sobre notas de html (anonimizado.py)  
 [AC] Covidminer sobre notas de html  
 
 
@@ -34,9 +23,7 @@ Anaconda
 conda create --name MexicanGenetics_COVID19
 
 conda activate MexicanGenetics_COVID19
-conda install pip
-
-pip install -r requirements.txt
+conda install --file requirements.txt
 ```
 
 c19mining
