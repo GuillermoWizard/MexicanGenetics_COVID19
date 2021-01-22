@@ -27,6 +27,23 @@ conda install --file requirements.txt
 ```
 
 c19mining
+
+Estructura requerida para funcionamiento de c19mining
+
+├───covidminer-master
+│   ├───scrapperMuestra.py
+│   ├───.github
+│   │   └───workflows
+│   ├───c19mining
+│   │   └───__pycache__
+│   ├───data
+│   │   ├───excels
+│   │   └───test
+│   ├───docs
+│   │   └───imgs
+│   ├───notasPrueba
+│   └───resources
+
 ```
 Notas de chat
 
