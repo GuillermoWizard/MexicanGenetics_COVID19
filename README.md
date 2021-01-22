@@ -33,14 +33,14 @@ Estructura requerida para funcionamiento de c19mining
 ├───covidminer-master  
 │   ├───scrapperMuestra.py  
 │   ├───.github  
-│   │   └───workflows  
+│   │         └───workflows  
 │   ├───c19mining  
-│   │   └───__pycache__  
+│   │         └───__pycache__  
 │   ├───data  
-│   │   ├───excels  
-│   │   └───test  
+│   │         ├───excels  
+│   │         └───test  
 │   ├───docs  
-│   │   └───imgs  
+│   │         └───imgs  
 │   ├───notasPrueba  
 │   └───resources  
 
