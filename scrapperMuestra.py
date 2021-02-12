@@ -1,7 +1,7 @@
 '''NAME
        scrapperMuestra.py
 VERSION
-        0.5
+        0.6
 AUTHOR
         Angel Adrian De la Cruz Castillo <angeldc@lcg.unam.mx>
 DESCRIPTION
