@@ -11,6 +11,7 @@ CATEGORY
 USAGE
        python scrapperMuestra.py -p Ruta/hacia/archivo.html -o Nombre/de/archivo.csv
 ARGUMENTS
+
 ::-p: str, ruta hacia archivo input .html
 ::--path: str, ruta hacia archivo input .html
 ::-o: str, nombre de archivo output
@@ -30,6 +31,24 @@ import simplejson as json
 import re
 
 import pandas as pd
+
+
+
+def getInsights(hospData):
+    
+    '''
+    hospData: str, posicion de diccionario de covidInsights donde se recolectaran los datos
+    data: str, datos de interes devueltos
+    '''
+    
+    data = ""
+    
+    for key in covidInsights[hospData]:
+        
+        data = data + "Descripción: " + covidInsights[hospData][key][0]["descripción"]
+        data = data + ", Menciones: " + covidInsights[hospData][key][0]["mención"] + " "
+        
+    return (data)
 
 # Parseador de argumentos
 
@@ -184,69 +203,32 @@ else:
 
     covidInsights = json.loads(covidInsights, encoding = "utf-8")
 
-    covid = ""
+    covid = getInsights("COVID-19")
 
-    sintomas = ""
+    sintomas = getInsights("sintomas")
 
-    comorbilidades = ""
+    comorbilidades = getInsights("comorbilidades")
 
-    muestreo = ""
+    muestreo = getInsights("muestreos")
 
-    medicamentos = ""
-    
-# Recorre diccionario de covidInsights
-
-    for key1 in covidInsights: 
-
-    	# Salta la primera key "texto"
-
-        if key1 != "texto":
-
-            # Recorre diccionario de cada variable de interes
-
-            for key2 in covidInsights[key1]:
-
-                # Recorre cada valor de cada variable de interes
-
-                for key3 in covidInsights[key1][key2]:
-
-                    if key1 == "comorbilidades":
-
-                        comorbilidades += str(key3) + " "
-                    
-                    if key1 == "sintomas" :
-
-                        sintomas += str(key3) + ""
-
-                    if key1 == "COVID-19":
-
-                        covid += str(key3) + ""
-
-                    if key1 == "muestreos" :
-
-                        muestreo += str(key3) + ""
-
-                    if key1 == "medicamentos":
-
-                        medicamentos += str(key3) + ""
-
-
+    medicamentos = getInsights("medicamentos")
 
     listaDeDatos = [["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"],[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion) ]]
 
 
     #Escribiendo en archivo .csvl
 
-    with open(f"{args.output}.csv", "w+", encoding = "utf-8") as nuevoArchivo :
+with open(f"{args.output}.csv", "w+", encoding = "utf-8") as nuevoArchivo :
     
-        escritor = csv.writer(nuevoArchivo)
+    escritor = csv.writer(nuevoArchivo)
 
-        escritor.writerows(listaDeDatos)
+    escritor.writerows(listaDeDatos)
 
-    nuevoArchivo.close()
+nuevoArchivo.close()
 
-    fp.close()
+fp.close()
 
-df = pd.DataFrame([[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion)]], columns = ["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"]) 
+dfPrueba = pd.DataFrame([[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion)]], columns = ["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"]) 
 
-df.to_excel(f"{args.output}.xlsx", encoding = "utf-8")
+dfPrueba.to_excel(f"{args.output}.xlsx", encoding = "utf-8")
+
