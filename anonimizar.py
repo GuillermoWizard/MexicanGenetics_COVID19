@@ -5,9 +5,10 @@ def anonimizar(data_dic):
     # Buscar diccionario de datos sensibles por paciente
     # Buscar dic nombres agresivo, se tiene que correr en todos los tipos de notas?
     
-    # [A-Z][a-z]+ [A-Z][a-z] <-- posible regex para nombres en formato simple ej. Angel Castillo, problema con Angel De la Cruz
+    # [A-Z][a-z]+ [A-Z][a-z]+ <-- posible regex para nombres en formato simple ej. Angel Castillo, problema con Angel De la Cruz
     
     # Buscar regexp telefono
+    # re.findall("\d{2}\-*\d{2}\-*\d{2}\-*\d{2}\-*\d{2}", cadena) <-- Funciona con guiones y numeros sencillos, ej. 5548019072, 55-48-01-90-72
    
 # Como limpiar direcciones?
    
