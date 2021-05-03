@@ -115,36 +115,19 @@ if soup.find(class_ = "js flexbox canvas canvastext webgl no-touch geolocation p
 
     sexo = str(sexo.next_element)
 
-    #notas = soup.find(class_ = "##6946985085284717763 reportDataRequired z-textbox z-textbox-disd z-textbox-text-disd")
-    
-    htmlnotas = ["" for i in range(5)]
+    diagnostico = ""
 
-    for i in range(5):
+    covid = ""
 
-        htmlnotas[i] = "Sin notas"
+    sintomas = ""
 
-    
-    #notas = s
-    # Lista de datos a escribir en el archivo .csv
-    #listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tNOTAS"],
-    #[nombre, sexo, edad, nacimiento, expediente, temporal, notas]]
+    comorbilidades = ""
 
+    muestreo = ""
 
-    listaDeDatos = [["NOMBRE\tSEXO\tEDAD\tNACIMIENTO\tEXPEDIENTE\tTEMPORAL\tDIAGNOSTICO\tCOVID\tSINTOMAS\tCOMORBS\tMUESTREO\tMEDICAMENTOS\tFECH.DEFUNCION\t"],[nombre + "\t" + sexo + "\t" + edad + "\t" + nacimiento + "\t" + expediente + "\t" + temporal + "\t" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos" + "Sin datos"]]
+    medicamentos = ""
 
-
-    #Escribiendo en archivo .csvl
-
-    with open(f"{args.output}", "w+") as nuevoArchivo :
-    
-        escritor = csv.writer(nuevoArchivo)
-
-        escritor.writerows(listaDeDatos)
-
-    nuevoArchivo.close()
-
-    fp.close()
-
+    fechaDefuncion = ""
 
 
 else:
@@ -213,10 +196,13 @@ else:
 
     medicamentos = getInsights("medicamentos")
 
-    listaDeDatos = [["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"],[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion) ]]
 
 
-    #Escribiendo en archivo .csvl
+
+listaDeDatos = [["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"],[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion) ]]
+
+
+#Escribiendo en archivo .csv
 
 with open(f"{args.output}.csv", "w+", encoding = "utf-8") as nuevoArchivo :
     
@@ -228,7 +214,14 @@ nuevoArchivo.close()
 
 fp.close()
 
+#Escribe archivo excel
+
 dfPrueba = pd.DataFrame([[str(nombre), str(sexo), str(edad), str(nacimiento), str(expediente), str(temporal), str(diagnosticoPrincipal), str(covid), str(sintomas), str(comorbilidades), str(muestreo), str(medicamentos), str(fechaDefuncion)]], columns = ["NOMBRE", "SEXO", "EDAD", "NACIMIENTO", "EXPEDIENTE", "TEMPORAL", "DIAGNOSTICO", "COVID", "SINTOMAS", "COMORBS", "MUESTREO", "MEDICAMENTOS", "FECH.DEFUNCION"]) 
 
 dfPrueba.to_excel(f"{args.output}.xlsx", encoding = "utf-8")
 
+# Diccionario con todos los datos obtenidos
+
+resultDict = {"Nombre":nombre, "Sexo":sexo, "Edad":edad, "FechaNacimiento":nacimiento, "Expediente":expediente, "Temporal":temporal, "DiagnosticoPrincipal":diagnosticoPrincipal, "MencionesCovid":covid, "Comorbilidades":comorbilidades, "Muestreo":muestreo, "Medicamentos":medicamentos, "FechaDefuncion":fechaDefuncion}
+
+print(resultDict)
